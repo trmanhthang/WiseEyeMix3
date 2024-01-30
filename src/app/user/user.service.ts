@@ -24,24 +24,46 @@ export class UserService {
       .getMany();
   }
 
-  async getDataUserCheckIn(month: string, year: string) {
+  async getDataCheckIn(month: string, year: string) {
     return await this.userInfoRepository
-      .createQueryBuilder('userInfo')
-      .leftJoinAndSelect('userInfo.checkInOuts', 'checkIn')
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.checkInOuts', 'checkIn')
       .where('MONTH(checkIn.timeStr) = :month', { month: month })
       .andWhere('YEAR(checkIn.timeStr) = :year', { year: year })
       .select([
-        'userInfo.userEnrollNumber',
-        'userInfo.userFullCode',
-        'userInfo.userFullName',
-        'userInfo.userEnrollName',
-        'userInfo.userCardNo',
-        'userInfo.userHireDay',
+        'user.userEnrollNumber',
+        'user.userFullCode',
+        'user.userFullName',
+        'user.userEnrollName',
+        'user.userCardNo',
+        'user.userHireDay',
         'checkIn.timeStr',
         'checkIn.timeDate',
         'checkIn.OriginType',
         'checkIn.cardNo',
       ])
       .getMany();
+  }
+
+  async getDataCheckInByUser(idUser, month, year) {
+    return await this.userInfoRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.checkInOuts', 'checkInOuts')
+      .where('user.id = :id', { id: idUser })
+      .andWhere('MONTH(checkInOuts.timeStr) = :month', { month: month })
+      .andWhere('YEAR(checkInOuts.timeStr) = :year', { year: year })
+      .select([
+        'user.userEnrollNumber',
+        'user.userFullCode',
+        'user.userFullName',
+        'user.userEnrollName',
+        'user.userCardNo',
+        'user.userHireDay',
+        'checkIn.timeStr',
+        'checkIn.timeDate',
+        'checkIn.OriginType',
+        'checkIn.cardNo',
+      ])
+      .getOne();
   }
 }
