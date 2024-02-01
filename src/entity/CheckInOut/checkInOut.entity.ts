@@ -43,7 +43,7 @@ export class CheckInOut {
   @Column({ name: 'EventAddr' })
   eventAddr: number;
 
-  @Column({ name: 'CardNo' })
+  @Column({ name: 'CardNo', nullable: true })
   cardNo: string;
 
   @Column({ name: 'InOutState' })

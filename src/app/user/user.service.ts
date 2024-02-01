@@ -24,25 +24,39 @@ export class UserService {
       .getMany();
   }
 
-  async getDataCheckIn(month: string, year: string) {
-    return await this.userInfoRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.checkInOuts', 'checkIn')
-      .where('MONTH(checkIn.timeStr) = :month', { month: month })
-      .andWhere('YEAR(checkIn.timeStr) = :year', { year: year })
-      .select([
-        'user.userEnrollNumber',
-        'user.userFullCode',
-        'user.userFullName',
-        'user.userEnrollName',
-        'user.userCardNo',
-        'user.userHireDay',
-        'checkIn.timeStr',
-        'checkIn.timeDate',
-        'checkIn.OriginType',
-        'checkIn.cardNo',
-      ])
-      .getMany();
+  async getDataCheckIn(month, year) {
+    return await this.userInfoRepository.query(
+      'SELECT \n' +
+        '    dbo.UserInfo.UserEnrollNumber AS ID,\n' +
+        '    dbo.UserInfo.UserFullName AS name,\n' +
+        '    dbo.UserInfo.UserEnrollName AS subname,\n' +
+        '    SUM(DATEDIFF(SECOND, CONVERT(TIME, CheckInOut.MinTimeStr), CONVERT(TIME, CheckInOut.MaxTimeStr))) / 3600.0 AS total_hours\n' +
+        'FROM \n' +
+        '    dbo.UserInfo\n' +
+        'LEFT JOIN (\n' +
+        '    SELECT\n' +
+        '        UserEnrollNumber,\n' +
+        '        MIN(TimeStr) AS MinTimeStr,\n' +
+        '        MAX(TimeStr) AS MaxTimeStr\n' +
+        '    FROM\n' +
+        '        dbo.CheckInOut\n' +
+        '    WHERE \n' +
+        `        MONTH(TimeStr) = ${month} 
+` +
+        `        AND YEAR(TimeStr) = ${year}
+` +
+        '    GROUP BY \n' +
+        '        UserEnrollNumber, CONVERT(DATE, TimeStr)\n' +
+        ') AS CheckInOut\n' +
+        'ON\n' +
+        '    dbo.UserInfo.UserEnrollNumber = CheckInOut.UserEnrollNumber\n' +
+        'GROUP BY \n' +
+        '    dbo.UserInfo.UserEnrollNumber,\n' +
+        '    dbo.UserInfo.UserFullName,\n' +
+        '    dbo.UserInfo.UserEnrollName\n' +
+        'ORDER BY \n' +
+        '    dbo.UserInfo.UserEnrollNumber ASC;',
+    );
   }
 
   async getDataCheckInByUser(idUser, month, year) {

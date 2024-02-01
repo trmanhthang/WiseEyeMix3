@@ -37,4 +37,17 @@ export class UserController {
     const data = await this.userService.getDataCheckInByUser(id, month, year);
     res.json(data);
   }
+
+  /**
+   * Lấy thông tin check in của nhân viên trong 1 tháng
+   **/
+  @Get('checkin_month')
+  async getDataCheckInForMonth(
+    @Query('month') month,
+    @Query('year') year,
+    @Res() res,
+  ) {
+    const data = await this.userService.getDataCheckIn(month, year);
+    res.json(data);
+  }
 }
