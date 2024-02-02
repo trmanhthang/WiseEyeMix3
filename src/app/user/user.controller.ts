@@ -1,5 +1,6 @@
-import { Controller, Get, Query, Res } from '@nestjs/common';
+import { Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -41,6 +42,7 @@ export class UserController {
   /**
    * Lấy thông tin check in của nhân viên trong 1 tháng
    **/
+  @UseGuards(AuthGuard('jwt'))
   @Get('checkin_month')
   async getDataCheckInForMonth(
     @Query('month') month,
