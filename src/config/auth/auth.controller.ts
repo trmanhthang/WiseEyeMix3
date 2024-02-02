@@ -1,4 +1,4 @@
-import { Controller, Post, Req, Res } from '@nestjs/common';
+import { Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -8,8 +8,8 @@ export class AuthController {
   /**
    * Lấy token để test authen
    * **/
-  @Post('token')
-  async createToken(@Res() res) {
+  @Post('login')
+  async login(@Res() res) {
     const token = await this.authService.createToken();
     res.cookie('token', token).json('Lấy token thành công!');
   }
