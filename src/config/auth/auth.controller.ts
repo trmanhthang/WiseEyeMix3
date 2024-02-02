@@ -4,6 +4,10 @@ import { AuthService } from './auth.service';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  /**
+   * Lấy token để test authen
+   * **/
   @Post('token')
   async createToken(@Res() res) {
     const token = await this.authService.createToken();
