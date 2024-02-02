@@ -24,6 +24,9 @@ export class UserService {
       .getMany();
   }
 
+  /**
+   * Lấy thông tin check in trong 1 tháng
+   * **/
   async getDataCheckIn(month, year) {
     return await this.userInfoRepository.query(
       'SELECT \n' +
