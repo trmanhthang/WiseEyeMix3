@@ -1,6 +1,7 @@
 import { Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { JwtGuard } from '../../config/auth/jwt.guard';
+import { AuthenGuard } from '../../guards/authen.guard';
+import { AuthorGuard } from "../../guards/author.guard";
 
 @Controller('user')
 export class UserController {
@@ -42,8 +43,9 @@ export class UserController {
   /**
    * Lấy thông tin check in của nhân viên trong 1 tháng
    **/
+  @UseGuards(AuthenGuard)
+  @UseGuards(AuthorGuard)
   @Get('checkin_month')
-  @UseGuards(JwtGuard)
   async getDataCheckInForMonth(
     @Query('month') month,
     @Query('year') year,

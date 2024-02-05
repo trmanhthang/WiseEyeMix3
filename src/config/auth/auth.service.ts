@@ -1,9 +1,22 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly jwtService: JwtService) {}
+
+  account = [
+    {
+      email: 'thangmt868@gmail.com',
+      password: '12345678',
+      role: 'ADMIN',
+    },
+    {
+      email: 'truongthang300@yahoo.com',
+      password: '12345678',
+      role: 'USER',
+    },
+  ];
 
   async createToken() {
     const payload = {
