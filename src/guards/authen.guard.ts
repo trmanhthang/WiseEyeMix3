@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   CanActivate,
   ExecutionContext,
   ForbiddenException,
@@ -20,7 +19,6 @@ export class AuthenGuard implements CanActivate {
   ): Promise<boolean | Promise<boolean> | Observable<boolean>> {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies['token'];
-    console.log('token: ', token);
 
     /**
      * Kiểm tra có token trên request hay không?

@@ -1,7 +1,8 @@
 import { Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthenGuard } from '../../guards/authen.guard';
-import { AuthorGuard } from "../../guards/author.guard";
+import { AuthorGuard } from '../../guards/author.guard';
+import { CurrentUser } from '../../decortors/currentUser.decorator';
 
 @Controller('user')
 export class UserController {
@@ -53,5 +54,10 @@ export class UserController {
   ) {
     const data = await this.userService.getDataCheckIn(month, year);
     res.json(data);
+  }
+
+  @Get('test')
+  test(@CurrentUser() user) {
+    return user;
   }
 }

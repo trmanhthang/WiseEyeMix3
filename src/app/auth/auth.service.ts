@@ -1,29 +1,23 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { account } from '../../fakeData/account';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly jwtService: JwtService) {}
+  async createToken(email: string, password: string) {
+    let user;
+    for (let i = 0; i < account.length; i++) {
+      if (email === account[i].email) {
+        user = account[i];
+        break;
+      }
+    }
 
-  account = [
-    {
-      email: 'thangmt868@gmail.com',
-      password: '12345678',
-      role: 'ADMIN',
-    },
-    {
-      email: 'truongthang300@yahoo.com',
-      password: '12345678',
-      role: 'USER',
-    },
-  ];
-
-  async createToken() {
-    const payload = {
-      username: 'abc',
-      sub: '123',
-    };
-    return this.jwtService.sign(payload, {});
+    if (user && user.password == password) {
+      return this.jwtService.sign(user, {});
+    }
+    return null;
   }
 
   async validateToken(token: string): Promise<any> {
